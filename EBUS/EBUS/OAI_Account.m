@@ -119,6 +119,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     
+    [textField resignFirstResponder];
     
     return YES;
 }
@@ -162,7 +163,6 @@
         //create the plist if we need to
         [fileManager createPlist:strAccountPlist];
         
-        NSLog(@"%@", dictAccountData);
         [fileManager writeToPlist:strAccountPlist :dictAccountData];
         
     }

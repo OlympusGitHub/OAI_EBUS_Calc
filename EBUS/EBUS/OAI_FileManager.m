@@ -44,7 +44,7 @@
 }
 
 - (NSDictionary* ) readPlist : (NSString* ) plistToRead {
-    NSLog(@"ok");
+    
     //set up an error 
     NSError* error;
     

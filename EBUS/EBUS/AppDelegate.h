@@ -1,9 +1,9 @@
 //
 //  AppDelegate.h
-//  EBUS
+//  ebus
 //
-//  Created by Steve Suranie on 12/28/12.
-//  Copyright (c) 2012 Olympus. All rights reserved.
+//  Created by Steve Suranie on 3/26/13.
+//  Copyright (c) 2013 Olympus. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

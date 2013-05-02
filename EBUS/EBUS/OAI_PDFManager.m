@@ -90,7 +90,7 @@
         CGRect imgLogoFrame = CGRectMake(312-(imgLogo.size.width/2), (pageSize.height/3), imgLogo.size.width, imgLogo.size.height);
         [self drawImage:imgLogo :imgLogoFrame];
         
-        NSString* strPDFTitle = @"EBUS Break Even Results For NAME OF FACILITY GOES HERE";
+        NSString* strPDFTitle = [NSString stringWithFormat:@"EBUS Break Even Results For %@", strTableTitle];
         textColor = [colorManager setColor:8 :16 :123];
         CGSize PDFTitleSize = [strPDFTitle sizeWithFont:headerFont constrainedToSize:pageConstraint lineBreakMode:NSLineBreakByWordWrapping];
         CGRect PDFTitleFrame = CGRectMake((pageSize.width/2)-(PDFTitleSize.width/2), imgLogoFrame.origin.y + imgLogoFrame.size.height + 50.0, PDFTitleSize.width, PDFTitleSize.height);
@@ -101,7 +101,7 @@
         UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, pageSize.width, pageSize.height), nil);
         
         //add page title
-        NSString* strPageTitle = @"EBUS Break Even Results";
+        NSString* strPageTitle = [NSString stringWithFormat:@"EBUS Break Even Results for %@", strTableTitle];
         CGSize pageTitleSize = [strPageTitle sizeWithFont:headerFont constrainedToSize:pageConstraint lineBreakMode:NSLineBreakByWordWrapping];
         CGRect pageTitleFrame = CGRectMake((pageSize.width/2)-(pageTitleSize.width/2), 30.0, pageTitleSize.width, pageTitleSize.height);
         textColor = [colorManager setColor:8 :16 :123];
@@ -233,7 +233,7 @@
         textColor = [colorManager setColor:8 :16 :123];
         [self drawText:strNotesTitle :notesTitleFrame :headerFont:textColor:1];
         
-        NSArray* notesArray = stringManager.notesArray;
+        NSDictionary* dictNotes = stringManager.dictNotes;
 
         //set up some points
         float rowX = kMarginInset;
@@ -242,132 +242,124 @@
         textColor = [colorManager setColor:66.0 :66.0 :66.0];
         NSMutableArray* arrLastFrame = [[NSMutableArray alloc] init];
         
-        //loop
-        for(int i=0; i<notesArray.count; i++) {
+        
+        //the bullet list
+        NSArray* arrNotesBulletList = [dictNotes objectForKey:@"Notes Bullet List"];
+        
+        float bulletY = rowY;
+        for(int i=0; i<arrNotesBulletList.count; i++) {
             
-            NSArray* rowItems = [notesArray objectAtIndex:i];
+            //get the ascii character
+            int thisCharID = 97+i;
+            NSString* strBullet = [NSString stringWithFormat:@"%c", thisCharID];
             
-            //bullet list
-            if (i<7) {
-                            
-                for(int r=0; r<rowItems.count; r++) {
-                    
-                    //increment row x
-                    if (r>0) {
-                        rowX = 100.0;
-                    }
-                    
-                    NSString* strThisItem = [rowItems objectAtIndex:r];
-                    
-                    CGSize thisItemSize = [strThisItem sizeWithFont:tableFont constrainedToSize:CGSizeMake(400.0, 999.0) lineBreakMode:NSLineBreakByWordWrapping];
-                    
-                    
-                    CGRect thisItemFrame = CGRectMake(rowX, rowY, thisItemSize.width, thisItemSize.height);
-                    
-                    //add to the lastFrame array
-                    [arrLastFrame addObject:NSStringFromCGRect(thisItemFrame)];
-                    
-                    [self drawText:strThisItem :thisItemFrame :tableFont :textColor :0];
-                    
-                    //reset row x
-                    rowX = kMarginInset;
-                }
-                
-                //increment y
-                CGRect lastFrame = CGRectFromString([arrLastFrame objectAtIndex:arrLastFrame.count-1]);
-                rowY = lastFrame.origin.y + lastFrame.size.height + 10.0;
+            //make the bullet entry
+            NSString* strBulletEntry = [NSString stringWithFormat:@"%@. %@", strBullet, [arrNotesBulletList objectAtIndex:i]];
             
+            CGSize bulletSize = [strBulletEntry sizeWithFont:contentFont constrainedToSize:CGSizeMake(468.0, 999.0) lineBreakMode:NSLineBreakByWordWrapping];
+            
+            //set the frame to hold the bullet
+            CGRect bulletFrame = CGRectMake(rowX, bulletY, bulletSize.width, bulletSize.height);
+            
+            //draw the text
+            [self drawText:strBulletEntry :bulletFrame :tableFont:textColor:0];
+            
+            bulletY = bulletY + bulletSize.height;
+            
+            
+        }
+        
+        //the table
+        float tableY = bulletY + 10.0;
+        float tableX = rowX;
+        
+        float maxColWidth = 0.0;
+        
+        NSArray* notesTable = [dictNotes objectForKey:@"Notes Table"];
+        
+        //get the maxColWidth
+        for(int i=0; i<notesTable.count; i++) {
+            
+            NSArray* rowData = [notesTable objectAtIndex:i];
+            
+            NSString* strThisRowHeader = [rowData objectAtIndex:0];
+            
+            CGSize thisRowHeaderSize = [strThisRowHeader sizeWithFont:tableFontBold constrainedToSize:CGSizeMake(234.0, 999.0) lineBreakMode:NSLineBreakByWordWrapping];
+            
+            if (thisRowHeaderSize.width > maxColWidth) {
+                maxColWidth = thisRowHeaderSize.width;
+            }
+        }
+        
+        //populate the table
+        float tableH = 0.0;
+        int row=-1;
+        for(int i=0; i<notesTable.count; i++) {
+            
+            NSArray* rowData = [notesTable objectAtIndex:i];
+            
+            NSString* strRowHeader = [rowData objectAtIndex:0];
+            NSString* strRowValue = [rowData objectAtIndex:1];
+            
+            CGSize rowHeaderSize = [strRowHeader sizeWithFont:tableFontBold constrainedToSize:CGSizeMake(maxColWidth, 999.0) lineBreakMode:NSLineBreakByWordWrapping];
+            CGSize rowValueSize = [strRowValue sizeWithFont:tableFont constrainedToSize:CGSizeMake(234.0, 999.0) lineBreakMode:NSLineBreakByWordWrapping];
+            
+            if (rowHeaderSize.height > rowValueSize.height) {
+                tableH = rowHeaderSize.height;
             } else {
-             
-                if (i>6 && i<notesArray.count-1) {
-                    
-                    //get the last bullet entry frame
-                    CGRect lastFrame = CGRectFromString([arrLastFrame objectAtIndex:arrLastFrame.count-1]);
-                    
-                    //make border rectangle
-                    UIColor* borderColor = [colorManager setColor:195 :212 :248];
-                    
-                    //make border rect
-                    CGRect borderFrame = CGRectMake(kMarginInset, lastFrame.origin.y+lastFrame.size.height+10.0, pageSize.width-(kMarginInset*2), 271.0);
-                    
-                   [self drawBorder:borderColor:borderFrame];
-                    
-                    
-                    bgRectColor = [colorManager setColor:248 :250 :255];
-                    bgRectStartPoint = CGPointMake(kMarginInset, (borderFrame.origin.y+borderFrame.size.height)-(borderFrame.size.height/2));
-                    bgRectEndPoint = CGPointMake(pageSize.width-kMarginInset, (borderFrame.origin.y+borderFrame.size.height)-(borderFrame.size.height/2));
-                    lineWidth=kLineWidth*270;
-                    
-                    //[self drawLine:lineWidth :bgRectColor :bgRectStartPoint :bgRectEndPoint];
-                    
-                    rowX = rowX + 5.0;
-                    rowY = rowY + 5.0;
-                    UIFont* rowFont;
-                    CGSize rowConstraint;
-                    int alignment;
-                    CGRect lastRowFrame;
-                    
-                    for(int r=0; r<rowItems.count; r++) {
-                        
-                        NSString* strThisRowItem = [rowItems objectAtIndex:r];
-                        
-                        //table headers
-                        if (i==7) {
-                           
-                            rowFont = tableFontBold;
-                            textColor = [colorManager setColor:66:66:66];
-                            rowConstraint = CGSizeMake(200.0, 999.0);
-                            alignment = 1;
-                            
-                        } else if (i>7 && i<notesArray.count-1) {
-                            
-                            rowFont = tableFont;
-                            textColor = [colorManager setColor:66:66:66];
-                            rowConstraint = CGSizeMake(pageSize.width-(205.0+(kMarginInset*2)), 999.0);
-                            alignment = 1;
-                        }
-                        
-                        if (r>0) {
-                            //increment x
-                            rowX = rowX + 205.0;
-                        }
-                        
-                        CGSize thisRowItemSize = [strThisRowItem sizeWithFont:rowFont constrainedToSize:rowConstraint lineBreakMode:NSLineBreakByWordWrapping];
-                        CGRect thisRowFrame = CGRectMake(rowX, rowY, thisRowItemSize.width, thisRowItemSize.height);
-                        
-                        [self drawText:strThisRowItem :thisRowFrame :rowFont :textColor :alignment];
-                        
-                        lastRowFrame = thisRowFrame;
-                        
-                    }
-                    
-                    rowY = lastRowFrame.origin.y + lastRowFrame.size.height + 10.0;
-                    
-                    //reset x
-                    rowX = kMarginInset;
-                    
-                } else {
-                    
-                    //reset x
-                    rowX = kMarginInset;
-                    rowY = rowY + 40.0;
-                    for (int r=0; r<rowItems.count; r++) {
-                        
-                        NSString* strThisRowItem = [rowItems objectAtIndex:r];
-                        
-                        CGSize thisRowSize = [strThisRowItem sizeWithFont:tableFont constrainedToSize:CGSizeMake(pageSize.width-(kMarginInset*2), 999.0) lineBreakMode:NSLineBreakByWordWrapping];
-                        
-                        CGRect thisRowFrame = CGRectMake(rowX, rowY, thisRowSize.width, thisRowSize.height);
-                        
-                        
-                        [self drawText:strThisRowItem :thisRowFrame :tableFont :textColor :0];
-                        
-                        rowY = thisRowFrame.origin.y + thisRowFrame.size.height + 10.0;
-                    }
-                }
-            }//end i check
+                tableH = rowValueSize.height;
+            }
             
-        }//end loop through notes array
+            row++;
+            
+            //*************add the border for each row************//
+        
+            //make border rectangle
+            borderColor = [colorManager setColor:204.0 :204.0 :204.0];
+            
+            //make header border rect
+            CGRect headerFrame = CGRectMake(tableX, tableY, maxColWidth, tableH + 5.0);
+            //make value border rect
+            CGRect valueFrame = CGRectMake(maxColWidth+72.0, tableY, 234.0, tableH + 5.0);
+            
+            [self drawBorder:borderColor:headerFrame];
+            [self drawBorder:borderColor:valueFrame];
+            
+            /*************add the text**************************/
+            
+            headerFrame = CGRectMake(tableX + 5.0, tableY + 2.0, maxColWidth-5.0, tableH);
+            valueFrame = CGRectMake(headerFrame.origin.x + headerFrame.size.width + 5.0, tableY + 2.0, 234.0, tableH);
+            
+            
+            int alignment = 0;
+            if (i==0) {
+                alignment = 1;
+            }
+            
+            //draw the text
+            [self drawText:strRowHeader :headerFrame :tableFont:textColor:alignment];
+            [self drawText:strRowValue :valueFrame :tableFont:textColor:alignment];
+            
+            tableY = tableY + tableH + 5.0;
+            
+        }
+        
+        //notes footers
+        
+        NSArray* arrNotesFooters = [dictNotes objectForKey:@"Notes Footers"];
+        float footerY = tableY + 10.0;
+        for(int i=0; i<arrNotesFooters.count; i++) {
+            
+            NSString* strThisFooter = [arrNotesFooters objectAtIndex:i];
+            
+            CGSize thisFooterSize = [strThisFooter sizeWithFont:tableFont constrainedToSize:pageConstraint lineBreakMode:NSLineBreakByWordWrapping];
+            CGRect thisFooterFrame = CGRectMake(kMarginInset, footerY, thisFooterSize.width, thisFooterSize.height);
+            
+            [self drawText:strThisFooter :thisFooterFrame :tableFont:textColor:0];
+            
+            footerY = footerY + 15.0;
+            
+        }
         
         done = YES;
         

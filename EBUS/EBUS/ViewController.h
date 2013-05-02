@@ -67,7 +67,11 @@
     NSString* clientFacility;
     
     NSString* pdfTitle;
-   
+    
+    NSDecimalNumberHandler* myDecimalHandler;
+    
+    BOOL isEmailValid;
+    
     
 }
 
@@ -75,7 +79,7 @@
 
 - (void) toggleViews : (UIView*) viewToShow : (UIView*) viewToHide;
 
-- (void) toggleAccount : (UIButton*) btnAccount; 
+- (void) toggleAccount : (UIButton*) btnAccount;
 
 - (void) clearDeck;
 
@@ -83,7 +87,7 @@
 
 - (void) showInfo : (UIButton*) infoButton;
 
-- (void) calculateResults;
+- (void) calculateResults : (NSString* ) strCalcWhat;
 
 - (void) showNotes : (UIGestureRecognizer*) theTap;
 
@@ -94,6 +98,12 @@
 - (void) saveEmailOptions : (UIButton*) btnSubmit;
 
 - (void) closeEmailOptions;
+
+- (NSDecimalNumber*) convertToNSDecimalNumber : (NSArray*) itemsToMultiply;
+
+- (NSString*) convertToCurrencyString : (NSDecimalNumber*) numberToConvert;
+
+- (NSString*) stripDollarSign : (NSString*) stringToStrip;
 
 
 @end

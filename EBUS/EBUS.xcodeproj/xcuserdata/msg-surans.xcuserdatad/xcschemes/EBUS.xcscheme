@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0450"
+   LastUpgradeVersion = "0460"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DBE156A1168E108D00B83184"
-               BuildableName = "EBUS.app"
-               BlueprintName = "EBUS"
-               ReferencedContainer = "container:EBUS.xcodeproj">
+               BlueprintIdentifier = "DB2DA3BC170214F10001BB87"
+               BuildableName = "ebus.app"
+               BlueprintName = "ebus"
+               ReferencedContainer = "container:ebus.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,24 +28,14 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DBE156C8168E108D00B83184"
-               BuildableName = "EBUSTests.octest"
-               BlueprintName = "EBUSTests"
-               ReferencedContainer = "container:EBUS.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DBE156A1168E108D00B83184"
-            BuildableName = "EBUS.app"
-            BlueprintName = "EBUS"
-            ReferencedContainer = "container:EBUS.xcodeproj">
+            BlueprintIdentifier = "DB2DA3BC170214F10001BB87"
+            BuildableName = "ebus.app"
+            BlueprintName = "ebus"
+            ReferencedContainer = "container:ebus.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -61,10 +51,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DBE156A1168E108D00B83184"
-            BuildableName = "EBUS.app"
-            BlueprintName = "EBUS"
-            ReferencedContainer = "container:EBUS.xcodeproj">
+            BlueprintIdentifier = "DB2DA3BC170214F10001BB87"
+            BuildableName = "ebus.app"
+            BlueprintName = "ebus"
+            ReferencedContainer = "container:ebus.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -79,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DBE156A1168E108D00B83184"
-            BuildableName = "EBUS.app"
-            BlueprintName = "EBUS"
-            ReferencedContainer = "container:EBUS.xcodeproj">
+            BlueprintIdentifier = "DB2DA3BC170214F10001BB87"
+            BuildableName = "ebus.app"
+            BlueprintName = "ebus"
+            ReferencedContainer = "container:ebus.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

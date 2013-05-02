@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>EBUS.xcscheme</key>
+		<key>ebus.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,12 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>DBE156A1168E108D00B83184</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>DBE156C8168E108D00B83184</key>
+		<key>DB2DA3BC170214F10001BB87</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -19,18 +19,27 @@
     
     /*************************************
      INIT MANAGERS
-    *************************************/
+     *************************************/
     colorManager = [[OAI_ColorManager alloc] init];
     mailManager = [[OAI_MailManager alloc] init];
     pdfManager = [[OAI_PDFManager alloc] init];
     accountManager = [[OAI_Account alloc] init];
     fileManager = [[OAI_FileManager alloc] init];
     
-    coverLetter = @"<p>Investing in Olympus technology is an important decision. Investing smarter in today's economy is a necessary one. That's why we've developed the Olympus EBUS Break Even Calculator. EBUS can be a compelling business proposition and major addition to your existing portfolio. In an effort to assist our current and prospective customers with their own analyses, Olympus has developed a flexible EBUS Break Even Calculator. Please keep in mind the following Olympus points when performing your analysis:</p><ul><li>The EU-ME1 is Olympus' most versatile processor</li><li>Olympus quality is backed by 510K FDA regulations</li><li>Flexible financial options are available and can be tailored to meet your needs</li><li>Olympus University offers accredited training courses</li><li>Olympus offers 24/7 technical support</li><li>Our customers can utilize web portals for repair history and equipment information</li><li>Our broad Field Support Team is available to serve your needs</li></ul><p>Utilize this calculator to illustrate how EBUS can help to improve the planning and budgeting process as well as generate a prospective return based on specific investment, cost and revenue assumptions.  Please enter any and all relevant information to your current business situation on the \"Input & Result\" page. Remember, this tool is designed to be flexible and to take into account your unique situation in terms of procedure volume, revenue, costs and the value of Olympus services that you plan to utilize going forward.</p><p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you.</p>";
+    //set up a decimal number handler
+    myDecimalHandler = [NSDecimalNumberHandler decimalNumberHandlerWithRoundingMode:NSRoundPlain
+                      scale:2
+           raiseOnExactness:NO
+            raiseOnOverflow:NO
+           raiseOnUnderflow:NO
+        raiseOnDivideByZero:NO
+    ];
+    
+    coverLetter = @"<div><p>Investing in Olympus technology is an important decision. Investing smarter in today's economy is a necessary one. That's why we've developed the Olympus EBUS Break Even Calculator. EBUS can be a compelling business proposition and major addition to your existing portfolio. In an effort to assist our current and prospective customers with their own analyses, Olympus has developed a flexible EBUS Break Even Calculator. Please keep in mind the following Olympus points when performing your analysis:</p><ul><li>The EU-ME1 is Olympus' most versatile processor</li><li>Olympus quality is backed by 510K FDA regulations</li><li>Flexible financial options are available and can be tailored to meet your needs</li><li>Olympus University offers accredited training courses</li><li>Olympus offers 24/7 technical support</li><li>Our customers can utilize web portals for repair history and equipment information</li><li>Our broad Field Support Team is available to serve your needs</li></ul><p>Utilize this calculator to illustrate how EBUS can help to improve the planning and budgeting process as well as generate a prospective return based on specific investment, cost and revenue assumptions.  Please enter any and all relevant information to your current business situation on the \"Input & Result\" page. Remember, this tool is designed to be flexible and to take into account your unique situation in terms of procedure volume, revenue, costs and the value of Olympus services that you plan to utilize going forward.</p><p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you.</p></div>";
     
     //notification center init
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"theMessenger"object:nil];
-        
+    
     /*************************************
      TOP BAR
      *************************************/
@@ -63,9 +72,7 @@
     [btnAccount addTarget:self action:@selector(toggleAccount:) forControlEvents:UIControlEventTouchUpInside];
     [btnAccount setBackgroundColor:[UIColor clearColor]];
     [topBar addSubview:btnAccount];
-    
-    
-    
+        
     //set the app title
     CGSize titleSize = [@"EBUS Break Even Calculator" sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:18.0]];
     UILabel* appTitle = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - titleSize.width)-20.0, 5.0, titleSize.width+10.0, titleSize.height)];
@@ -79,7 +86,7 @@
     
     /************************************
      WRAPPER
-    ************************************/
+     ************************************/
     
     //set up a wrapper to hold our basic items
     objectWrapper = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-topBar.frame.size.height)];
@@ -89,12 +96,21 @@
      TITLE IMAGE
      *************************************/
     
-    UIImage* imgTitle = [UIImage imageNamed:@"imgTitle.png"];
+    NSString* strTitle = @"EBUS Break Even Calculator";
+    titleSize = [strTitle sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:24.0]];
+    UILabel* lblTitle = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width/2)-(titleSize.width/2), 170.0, titleSize.width, titleSize.height)];
+    lblTitle.text = strTitle;
+    lblTitle.textColor = [colorManager setColor:8.0 :16.0 :123.0];
+    lblTitle.font = [UIFont fontWithName:@"Helvetica-Bold" size:24.0];
+    lblTitle.backgroundColor = [UIColor clearColor];
+    [objectWrapper addSubview:lblTitle];
+    
+    UIImage* imgTitle = [UIImage imageNamed:@"OAI_endoscopeinlung.png"];
     UIImageView* imgTitleView = [[UIImageView alloc] initWithImage:imgTitle];
     //reposition
     CGRect imgTitleFrame = imgTitleView.frame;
     imgTitleFrame.origin.x = (self.view.frame.size.width/2)-(imgTitle.size.width/2);
-    imgTitleFrame.origin.y = 300.0;
+    imgTitleFrame.origin.y = 200.0;
     imgTitleView.frame = imgTitleFrame;
     [objectWrapper addSubview:imgTitleView];
 	
@@ -151,7 +167,7 @@
     lblSummaryTitle.text = summaryTitle;
     lblSummaryTitle.font = [UIFont fontWithName:@"Helvetica-Bold" size:24.0];
     [vSummaryScreen addSubview:lblSummaryTitle];
-        
+    
     UIWebView* webSummary = [[UIWebView alloc] initWithFrame:CGRectMake(20.0, 70.0, self.view.frame.size.width-40.0, 600.0)];
     webSummary.delegate = self;
     webSummary.tag = 420;
@@ -192,7 +208,7 @@
     
     //instructions
     NSString* strCalculatorInstructions = @"To begin, enter the required information in the yellow input section below. The placeholder values are conservative assumptions calculated by Olympus based on the results of the Medical University of South Carolina (MUSC) EBUS downstream revenue study. If you have detailed information as it relates to your particular facility, simply delete the assumed value and replace with your specific data. Your facility-specific, break-even results are then calculated and displayed in the blue section. The \"notes, assumptions & references\" section summarizes the downstream revenue calculation details.";
-     CGSize strCalculatorInstructionsSize = [calculatorTitle sizeWithFont:[UIFont fontWithName:@"Helvetica" size:18.0]];
+    CGSize strCalculatorInstructionsSize = [calculatorTitle sizeWithFont:[UIFont fontWithName:@"Helvetica" size:18.0]];
     
     OAI_Label* lblCalculatorInstructions = [[OAI_Label alloc] initWithFrame:CGRectMake(20.0, 60.0, vCalculatorScreen.frame.size.width-40.0, strCalculatorInstructionsSize.height *10)];
     lblCalculatorInstructions.text = strCalculatorInstructions;
@@ -204,7 +220,7 @@
     
     /**********************************
      INPUT SECTION
-    **********************************/
+     **********************************/
     //label
     OAI_Label* lblInputSection = [[OAI_Label alloc] initWithFrame:CGRectMake(20.0, lblCalculatorInstructions.frame.origin.y + lblCalculatorInstructions.frame.size.height, vCalculatorScreen.frame.size.width, 30.0)];
     lblInputSection.text = @"Input:";
@@ -217,11 +233,11 @@
     vCalcInputs.backgroundColor = [colorManager setColor:252.0 :252.0 :212.0];
     vCalcInputs.layer.borderWidth = 1.0;
     vCalcInputs.layer.borderColor = [colorManager setColor:209 :199 :42].CGColor;
-        
+    
     //quote
     NSString* strEBUSQuote = @"Total Cost of EBUS Equipment from Quote:";
     CGSize EBUSQuoteSize = [strEBUSQuote sizeWithFont:[UIFont fontWithName:@"Helvetica" size:18.0]];
-
+    
     OAI_Label* lblEBUSQuote = [[OAI_Label alloc] initWithFrame:CGRectMake(10.0, 10.0, EBUSQuoteSize.width, 30.0)];
     lblEBUSQuote.text = strEBUSQuote;
     lblEBUSQuote.textColor = [colorManager setColor:66.0 :66.0 :66.0];
@@ -243,7 +259,7 @@
     //action
     [btnEBUSHelp addTarget:self action:@selector(showInfo:) forControlEvents:UIControlEventTouchUpInside];
     btnEBUSHelp.tag = 501;
-
+    
     [vCalcInputs addSubview:lblEBUSQuote];
     [vCalcInputs addSubview:txtEBUSQuote];
     [vCalcInputs addSubview:btnEBUSHelp];
@@ -315,7 +331,7 @@
     //set up initial down stream revenue
     float netProfit = roundf(9874*.3);
     txtDownstreamRev.text = [NSString stringWithFormat:@"$%.02f", netProfit];
-
+    
     [vCalculatorScreen addSubview:vCalcInputs];
     
     /**********************************
@@ -394,12 +410,12 @@
     lblEmail.backgroundColor = [UIColor clearColor];
     lblEmail.textAlignment = NSTextAlignmentRight;
     [vCalculatorScreen addSubview:lblEmail];
-
+    
     [vCalculatorScreen addSubview:lblBreakEvenSection];
     [vCalculatorScreen addSubview:vResults];
     
     /**********************************
-     NOTES 
+     NOTES
      **********************************/
     
     //add the assumptions disclosure button
@@ -416,7 +432,7 @@
     
     //make a  tap gesture enabled label, the user can click to display the notes
     OAI_Label* lblNotes = [[OAI_Label alloc] initWithFrame:CGRectMake(btnNotes.frame.origin.x + btnNotes.frame.size.width + 10.0, btnNotes.frame.origin.y, self.view.frame.size.width-40.0, 30.0)];
-    lblNotes.text = @"Notes, Assumptions and References";    
+    lblNotes.text = @"Notes, Assumptions and References";
     lblNotes.textColor = [colorManager setColor:8 :16 :123];
     lblNotes.font = [UIFont fontWithName:@"Helvetica" size:15.0];
     lblNotes.backgroundColor = [UIColor clearColor];
@@ -460,7 +476,7 @@
     [vCalculatorScreen addSubview:webNotesSheet];
     
     //calculate initial results
-    [self calculateResults];
+    [self calculateResults:@"Annual and weekly procedures"];
     
     //add calculator screen
     [self.view addSubview:vCalculatorScreen];
@@ -491,7 +507,8 @@
     [vLblBG addSubview:lblEmailOptions];
     
     [vMailOptions addSubview:vLblBG];
-        
+    
+    /*
     //add the labels
     NSString* strCoverLetterOption=  @"Include Cover Letter";
     CGSize coverLetterOptionSize = [strCoverLetterOption sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:24.0]];
@@ -502,8 +519,7 @@
     lblCoverLetterOption.backgroundColor = [UIColor clearColor];
     [vMailOptions addSubview:lblCoverLetterOption];
     
-    //our sc butttons
-    NSArray* segmentedControlItems = [[NSArray alloc] initWithObjects:@"Yes", @"No", nil];
+    
     
     //cover letter options
     scCoverLetterOptions = [[UISegmentedControl alloc] initWithItems:segmentedControlItems];
@@ -515,15 +531,19 @@
     scCoverLetterOptions.selectedSegmentIndex = 0;
     
     [vMailOptions addSubview:scCoverLetterOptions];
+    */
     
     NSString* strPDFOption=  @"Send As PDF";
     CGSize PDFOptionSize = [strPDFOption sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:24.0]];
     
-    OAI_Label* lblPDFOption = [[OAI_Label alloc] initWithFrame:CGRectMake((vMailOptions.frame.size.width/2)-(PDFOptionSize.width/2), scCoverLetterOptions.frame.origin.y + scCoverLetterOptions.frame.size.height, PDFOptionSize.width, 60.0)];
+    OAI_Label* lblPDFOption = [[OAI_Label alloc] initWithFrame:CGRectMake((vMailOptions.frame.size.width/2)-(PDFOptionSize.width/2), lblEmailOptions.frame.origin.y + lblEmailOptions.frame.size.height + 30.0, PDFOptionSize.width, 60.0)];
     lblPDFOption.text = strPDFOption;
     lblPDFOption.textColor = [colorManager setColor:66.0 :66.0 :66.0];
     lblPDFOption.backgroundColor = [UIColor clearColor];
     [vMailOptions addSubview:lblPDFOption];
+    
+    //our sc butttons
+    NSArray* segmentedControlItems = [[NSArray alloc] initWithObjects:@"Yes", @"No", nil];
     
     //pdf  options
     scPDFOptions = [[UISegmentedControl alloc] initWithItems:segmentedControlItems];
@@ -535,7 +555,7 @@
     scPDFOptions.selectedSegmentIndex = 0;
     
     [vMailOptions addSubview:scPDFOptions];
-        
+    
     //signature
     NSString* strName=  @"Add Your Name";
     
@@ -545,6 +565,7 @@
     txtName.borderStyle = UITextBorderStyleRoundedRect;
     txtName.font = [UIFont fontWithName:@"Helvetica" size:18.0];
     txtName.placeholder = strName;
+    txtName.delegate = self;
     txtName.tag = 701;
     [vMailOptions addSubview:txtName];
     
@@ -557,6 +578,7 @@
     txtFacility.borderStyle = UITextBorderStyleRoundedRect;
     txtFacility.placeholder = strFacility;
     txtFacility.tag = 702;
+    txtFacility.delegate = self;
     txtFacility.font = [UIFont fontWithName:@"Helvetica" size:18.0];
     [vMailOptions addSubview:txtFacility];
     
@@ -648,13 +670,13 @@
     
     /***********************************
      ACCOUNT SCREEN
-    ***********************************/
+     ***********************************/
     CGRect accountFrame = CGRectMake(100.0, -350.0, 300.0, 350.0);
     accountManager.frame = accountFrame;
     [accountManager buildAccountObjects];
     [self.view addSubview:accountManager];
     [self.view bringSubviewToFront:topBar];
-
+    
 }
 
 #pragma mark - Notification Center
@@ -667,13 +689,15 @@
         
         if ([theEvent isEqualToString:@"Close Account Win"]) {
             
+            [self.view endEditing:YES];
+            
             UIView* vAccount = [[notification userInfo] objectForKey:@"Account View"];
             CGRect vAccountFrame = vAccount.frame;
             vAccountFrame.origin.y = -350.0;
             
             [self animateView:vAccount :vAccountFrame];
         }
-
+        
     }
 }
 
@@ -695,7 +719,7 @@
     
     
     [self toggleViews:viewToShow:viewToHide];
-
+    
 }
 
 #pragma mark - Toggle Views
@@ -723,12 +747,12 @@
         if (viewToHideFrame.origin.x == 0.0) {
             viewToHideFrame.origin.x = 0.0-viewToHideFrame.size.width;
         }
-
+        
     }
     
     [self animateView:viewToHide :viewToHideFrame];
     [self animateView:viewToShow :viewToShowFrame];
-       
+    
 }
 
 - (void) toggleAccount : (UIButton*) btnAccount {
@@ -804,13 +828,13 @@
             
             [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn
              
-                animations:^{
-                    thisSubView.alpha = 0.0;
-                }
+                             animations:^{
+                                 thisSubView.alpha = 0.0;
+                             }
              
-                completion:^ (BOOL finished) {
-                }
-            ];
+                             completion:^ (BOOL finished) {
+                             }
+             ];
         }
     }
 }
@@ -820,31 +844,31 @@
     
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn
      
-        animations:^{
-            thisView.frame = thisFrame;
-        }
+                     animations:^{
+                         thisView.frame = thisFrame;
+                     }
      
-        completion:^ (BOOL finished) {
-            
-            if (thisView.tag == 102) {
-                
-                NSArray* thisViewSubViews = thisView.subviews;
-                
-                for(int v=0; v<thisViewSubViews.count; v++) {
-                    
-                    if([[thisViewSubViews objectAtIndex:v] isMemberOfClass:[UITextView class]]) {
-                        
-                        UITextView* thisTextView = (UITextView*)[thisViewSubViews objectAtIndex:v];
-                        CGRect textViewFrame = thisTextView.frame;
-                        textViewFrame.size.height = textViewFrame.size.height + 1.0;
-                        thisTextView.frame = textViewFrame;
-                        
-                    }
-                }
-                
-            }
-        }
-    ];
+                     completion:^ (BOOL finished) {
+                         
+                         if (thisView.tag == 102) {
+                             
+                             NSArray* thisViewSubViews = thisView.subviews;
+                             
+                             for(int v=0; v<thisViewSubViews.count; v++) {
+                                 
+                                 if([[thisViewSubViews objectAtIndex:v] isMemberOfClass:[UITextView class]]) {
+                                     
+                                     UITextView* thisTextView = (UITextView*)[thisViewSubViews objectAtIndex:v];
+                                     CGRect textViewFrame = thisTextView.frame;
+                                     textViewFrame.size.height = textViewFrame.size.height + 1.0;
+                                     thisTextView.frame = textViewFrame;
+                                     
+                                 }
+                             }
+                             
+                         }
+                     }
+     ];
     
 }
 
@@ -887,12 +911,12 @@
     
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn
      
-        animations:^{
-            webNotesSheet.frame = webNotesFrame;
-        }
+                     animations:^{
+                         webNotesSheet.frame = webNotesFrame;
+                     }
      
-        completion:^ (BOOL finished) {
-        }
+                     completion:^ (BOOL finished) {
+                     }
      ];
     
 }
@@ -904,49 +928,160 @@
     
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn
      
-        animations:^{
-            webNotesSheet.frame = webNotesFrame;
-        }
+                     animations:^{
+                         webNotesSheet.frame = webNotesFrame;
+                     }
      
-        completion:^ (BOOL finished) {
-        }
-    ];
+                     completion:^ (BOOL finished) {
+                     }
+     ];
     
 }
 
 #pragma mark - Calculator
-- (void) calculateResults {
+
+- (void) calculateResults : (NSString* ) strCalcWhat {
     
-    //validate the entry (make sure it is a number)
-    NSNumberFormatter* checkNum = [[NSNumberFormatter alloc] init];
-    checkNum.allowsFloats = YES;
+    //set up our error ivars
+    BOOL hasError = NO;
+    NSMutableString* strErrMsg = [[NSMutableString alloc] init];
     
-    //get quote value
-    NSString* strQuote = [[txtEBUSQuote.text stringByReplacingOccurrencesOfString:@"," withString:@""] stringByTrimmingCharactersInSet: [NSCharacterSet symbolCharacterSet]];
-    
-    //get the downstream revenue
-    NSString* downStreamRev = [[txtDownstreamRev.text stringByReplacingOccurrencesOfString:@"," withString:@""] stringByTrimmingCharactersInSet: [NSCharacterSet symbolCharacterSet]];
-    
-    if ([strQuote isEqualToString:@""] || !strQuote) {
-        strQuote = @"0";
-    }
-    
-    if ([checkNum numberFromString:strQuote]) {
+    //check to see what calculations we are making
+    if ([strCalcWhat isEqualToString:@"Net Profit Margin"]) {
         
-        float fQuote = [strQuote floatValue];
-        float fNumProcedures = roundf(fQuote/[downStreamRev floatValue]);
-        float fNumPerWeek = fNumProcedures/52;
-       
-        lblProcedureResult.text = [NSString stringWithFormat:@"%.0f", fNumProcedures];
-        lblWeekResult.text = [NSString stringWithFormat:@"%.01f", fNumPerWeek];
+        //validate text field
+        if (txtNetProfit.text.length == 0 || [txtNetProfit.text isEqualToString:NULL]) {
+            hasError = YES;
+            [strErrMsg appendString:@"You must enter a number for the \nNet Profit Margin entry.\n\n"];
+        }
         
+        if (hasError) {
+            
+            alertManager.closeAction = @"Do Nothing";
+            alertManager.titleBarText = @"Warning: Results Error!";
+            [alertManager showAlert:strErrMsg];
+            
+        } else {
+            
+            //get the value entered for the net profit
+            NSString* strNetProfit = txtNetProfit.text;
+            
+            //strip the % symbol
+            NSString * strNetProfitCleaned = [strNetProfit stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [strNetProfit length])];
+            
+            //convert to a number
+            float netProfitPercentage = [strNetProfitCleaned floatValue]/100;
+            
+            //dump into an array to send to our NSDecimal convertor
+            NSArray* arrDownStreamMultipliers = [[NSArray alloc] initWithObjects:@"9874", [NSString stringWithFormat:@"%f", netProfitPercentage], nil];
+            
+            //convert to a NSDecimal
+            NSDecimalNumber* decDownstreamRevnue = [self convertToNSDecimalNumber:arrDownStreamMultipliers];
+            
+            //convert to currency string & display
+            txtDownstreamRev.text = [self convertToCurrencyString:decDownstreamRevnue];
+            
+            [self calculateResults:@"Annual and Weekly Procedures"];
+            
+        }
+    
     } else {
         
-        alertManager.closeAction = @"Do Nothing";
-        alertManager.titleBarText = @"Warning: Results Error!";
-        [alertManager showAlert:@"You must enter a number in the EBUS quote text field."];
+        if (txtEBUSQuote.text.length == 0 || [txtEBUSQuote.text isEqualToString:NULL]) {
+            hasError = YES;
+            [strErrMsg appendString:@"You must enter a number for the EBUS quote entry.\n\n"];
+        }
+        
+        if (txtDownstreamRev.text.length == 0 || [txtDownstreamRev.text isEqualToString:NULL]) {
+            hasError = YES;
+            [strErrMsg appendString:@"You must enter a number for the \nDownstream Revenue entry.\n\n"];
+        }
+
+        if (hasError) {
+            
+            alertManager.closeAction = @"Do Nothing";
+            alertManager.titleBarText = @"Warning: Results Error!";
+            [alertManager showAlert:strErrMsg];
+            
+        } else {
+            
+            //now that we have the downstream revenue we can get the number of procedures required to break even (annual)
+            
+            //get the ebus quote
+            NSString* strEBUSQuote = txtEBUSQuote.text;
+            
+            //strip any symbols from it
+            NSString* strEBUSQuoteCleaned = [strEBUSQuote stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [strEBUSQuote length])];
+            
+            //convert to a decimal number
+            NSArray* arrEBUSMultipliers = [[NSArray alloc] initWithObjects:strEBUSQuoteCleaned, @"1", nil];
+            NSDecimalNumber* decEBUSQuote = [self convertToNSDecimalNumber:arrEBUSMultipliers];
+            
+            //get the downstream revenue number
+            NSString* strDownstreamRevnue = txtDownstreamRev.text;
+            
+            //strip any symbols from it
+            NSString* strDownstreamRevenueCleaned = [strDownstreamRevnue stringByReplacingOccurrencesOfString:@"[^0-9]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [strDownstreamRevnue length])];
+            
+            //convert to a decimal number
+            NSArray* arrDownstreamMultipliers = [[NSArray alloc] initWithObjects:strDownstreamRevenueCleaned, @"1", nil];
+            NSDecimalNumber* decDownstreamRevenue = [self convertToNSDecimalNumber:arrDownstreamMultipliers];
+            
+            //divide quote/by revenue to get annual number of procedures
+            float annualProcedures = [decEBUSQuote floatValue]/[decDownstreamRevenue floatValue];
+            
+            //display the annual procedures
+            lblProcedureResult.text = [NSString stringWithFormat:@"%.2f", annualProcedures];
+            
+            //and how many procedures a week needed
+            float weeklyProcedures = annualProcedures/52;
+            
+            lblWeekResult.text = [NSString stringWithFormat:@"%.2f", weeklyProcedures];
+        }
+                
+    }
+       
+}
+
+- (NSDecimalNumber*) convertToNSDecimalNumber : (NSArray*) itemsToMultiply {
+    
+    //get items from array
+    NSString* percentage = [itemsToMultiply objectAtIndex:1];
+    NSString* valueToGetPercentageFrom = [itemsToMultiply objectAtIndex:0];
+    
+    //convert strings to NSDecimal
+    NSDecimalNumber* decPercentage = [[NSDecimalNumber alloc] initWithString:percentage];
+    NSDecimalNumber* decValueToGetFrom = [[NSDecimalNumber alloc] initWithString: valueToGetPercentageFrom];
+    
+    //get our results
+    NSDecimalNumber* decAnswer = [decValueToGetFrom decimalNumberByMultiplyingBy:decPercentage
+        withBehavior:myDecimalHandler];
+    
+    return decAnswer;
+
+}
+
+- (NSString*) convertToCurrencyString : (NSDecimalNumber*) numberToConvert {
+    
+    //convert to string
+    NSString* currencyString = [NSNumberFormatter localizedStringFromNumber:numberToConvert numberStyle:NSNumberFormatterCurrencyStyle];
+    
+    return currencyString;
+    
+}
+
+- (NSString*) stripDollarSign : (NSString*) stringToStrip {
+    
+    //check to see if the number is already formatted correctly
+    NSRange dollarSignCheck = [stringToStrip rangeOfString:@"$"];
+    //only strip it if it has the $
+    if (dollarSignCheck.location != NSNotFound) {
+        
+        NSString* cleanedString = [stringToStrip substringWithRange:NSMakeRange(1, stringToStrip.length-1)];
+        return cleanedString;
     }
     
+    return 0;
     
 }
 
@@ -994,24 +1129,17 @@
     //show mail options page
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn
      
-        animations:^{
-            vMailOptions.frame = vMailOptionsFrame;
-        }
+                     animations:^{
+                         vMailOptions.frame = vMailOptionsFrame;
+                     }
      
-        completion:^ (BOOL finished) {
-        }
-    ];
+                     completion:^ (BOOL finished) {
+                     }
+     ];
     
 }
 
 - (void) saveEmailOptions : (UIButton*) btnSubmit {
-    
-    //get the options
-    if (scCoverLetterOptions.selectedSegmentIndex == 0) {
-        hasCoverLetter = YES;
-    } else {
-        hasCoverLetter = NO;
-    }
     
     if (scPDFOptions.selectedSegmentIndex == 0) {
         isPDF = YES;
@@ -1023,12 +1151,9 @@
     userName = txtName.text;
     clientFacility = txtFacility.text;
     
-    //close the window
-    [self closeEmailOptions];
-    
     //get results
     [self emailResults];
-        
+    
 }
 
 - (void) emailResults {
@@ -1036,27 +1161,27 @@
     //init results dict
     NSMutableDictionary* dictResults = [[NSMutableDictionary alloc] init];
     
-    BOOL isValid = YES;
+    isEmailValid = YES;
     NSMutableString* errMsg = [[NSMutableString alloc] init];
     
     //validate results
     if ([lblProcedureResult.text intValue] == 0 || [lblWeekResult.text floatValue] == 0.0) {
-        isValid = NO;
+        isEmailValid = NO;
         [errMsg appendString:@"There was a problem with your results, please check your entries in the input section and make sure there is a value entered for each one.\n\n"];
     }
     
     
     if ([clientFacility isEqualToString:@""] || clientFacility == nil || clientFacility.length == 0) {
-        isValid = NO;
+        isEmailValid = NO;
         [errMsg appendString:@"You must enter a facility name in the email set up screen."];
     }
     
-    if (!isValid) {
+    if (!isEmailValid) {
         alertManager.closeAction = @"Do Nothing";
         alertManager.titleBarText = @"Mail Error!";
         
         [alertManager showAlert:errMsg];
-    
+        
     } else {
         
         //get all the information entered and calculated
@@ -1078,16 +1203,10 @@
         
         [emailBody appendString:[NSString stringWithFormat:@"<p style=\"font-weight: 900; font-size: 20px; margin: 0 0 20px 0; color:#08107B\">EBUS Break Even Results For %@</p><div style=\"color: #666; font-size: 18px; font-weight: 200; font-family: Helvetica, Arial, sans-serif\"", clientFacility]];
         
-        //check to see if cover letter is included
-        if (hasCoverLetter) {
-            [emailBody appendString:coverLetter];
-            [emailBody appendString:@"<p>Included below are your break even figures on EBUS equipment.</p>"];
-        } else {
-            [emailBody appendString:@"<p>Thank you for your interest in Olympus products. Included below are your break even figures on EBUS equipment.</p>"];
-        }
-                 
+        [emailBody appendString:@"<p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you Below are the results of the EBUS Downstream Revenue Calculator.</p>"];
+        
         //signature
-        if (userName) { 
+        if (userName) {
             [emailBody appendString:[NSString stringWithFormat:@"<p>Best regards,</p><p>%@</p></div>", userName]];
         } else {
             [emailBody appendString:@"<p>Best regards,</p><p>The Olympus EBUS Team</p>"];
@@ -1107,7 +1226,7 @@
         if (isPDF) {
             
             pdfTitle = [NSString stringWithFormat:@"ebusBreakEvenResults_%@.pdf", clientFacility];
-            pdfManager.strTableTitle = @"EBUS Break Even Results";
+            pdfManager.strTableTitle = clientFacility;
             [pdfManager makePDF:pdfTitle:dictResults];
             
         }
@@ -1143,7 +1262,9 @@
                 [mailViewController addAttachmentData:pdfData mimeType:@"application/pdf" fileName:pdfTitle];
                 
             }
-
+            
+            //close the window
+            [self closeEmailOptions];
             
             [self presentViewController:mailViewController animated:YES completion:NULL];
             
@@ -1186,88 +1307,109 @@
 
 - (void) closeEmailOptions {
     
+    [self.view endEditing:YES];
+    
     CGRect vMailOptionsFrame = vMailOptions.frame;
     vMailOptionsFrame.origin.y = -550.0;
     
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut
      
-        animations:^{
-            vMailOptions.frame = vMailOptionsFrame;
-        }
+                     animations:^{
+                         vMailOptions.frame = vMailOptionsFrame;
+                     }
      
-        completion:^ (BOOL finished) {
-        }
+                     completion:^ (BOOL finished) {
+                     }
      ];
-
+    
 }
 
 #pragma mark - TextField Methods
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-        
+
+- (void)textFieldDidEndEditing:(OAI_TextField *)textField {
+    
     [textField resignFirstResponder];
     
-    //changing the net profit
+    BOOL isValid; 
+    
+    //net profit (percentage)
     if (textField.tag == 302) {
+    
+        //get first character and see if it is a number or $
+        BOOL isPercentSymbol = NO;
+        NSString* strPercentage;
         
-        NSString* strNetProfit = textField.text;
+        // Create the predicate
+        NSPredicate *myPredicate = [NSPredicate predicateWithFormat:@"SELF endswith %@", @"%"];
+        isPercentSymbol = [myPredicate evaluateWithObject:textField.text];
         
-        //validate the entry (make sure it is a number)
-         NSNumberFormatter* checkNum = [[NSNumberFormatter alloc] init];
-        checkNum.allowsFloats = YES;
         
-        if ([checkNum numberFromString:strNetProfit]) {
-           
-            //convert to a decimal
-            float fNetProfit = [strNetProfit floatValue]/100;
+        //check to see if the entry is numeric
+        if (!isPercentSymbol) {
+            NSCharacterSet *alphaNums = [NSCharacterSet decimalDigitCharacterSet];
+            NSCharacterSet *inStringSet = [NSCharacterSet characterSetWithCharactersInString:textField.text];
             
-            //set up initial down stream revenue
-            float netProfit = roundf(9874*fNetProfit);
-            txtDownstreamRev.text = [NSString stringWithFormat:@"$%.02f", netProfit];
-            txtNetProfit.text = [NSString stringWithFormat:@"%@%%", strNetProfit];
+            isValid = [alphaNums isSupersetOfSet:inStringSet];
             
-            [self calculateResults];
+            if (!isValid) {
+                strPercentage = @"0.0%";
+            } else {
+                strPercentage = [NSString stringWithFormat:@"%@%%", textField.text];
+            }
+            
+            textField.text = strPercentage;
+        }
         
+        [self calculateResults:@"Net Profit Margin"];
+    
+    } else if (textField.tag == 300 || textField.tag == 301) {
+        
+        //check to see if the user put in decimal points, strip string of point and following items
+        NSString* strWorkingString;
+        if([textField.text rangeOfString:@"."].location != NSNotFound) {
+            strWorkingString = [textField.text substringWithRange:NSMakeRange(0, [textField.text rangeOfString:@"."].location)];
         } else {
-            alertManager.closeAction = @"Do Nothing";
-            alertManager.titleBarText = @"Warning: Net Profit Error!";
-            [alertManager showAlert:@"You must enter a number in the net profit text field."];
-            
+            strWorkingString = textField.text;
         }
+        
+        //invoke NSScanner to clean the string of any other non-numeric characters ($, %, etc.)
+        NSScanner* scanner = [NSScanner scannerWithString:strWorkingString];
+        NSCharacterSet* numbers = [NSCharacterSet
+                                   characterSetWithCharactersInString:@"0123456789"];
+        NSMutableString* strippedString = [NSMutableString stringWithCapacity:strWorkingString.length];
+        
+        while ([scanner isAtEnd] == NO) {
+            NSString* buffer;
+            if ([scanner scanCharactersFromSet:numbers intoString:&buffer]) {
+                [strippedString appendString:buffer];
+                
+            } else {
+                [scanner setScanLocation:([scanner scanLocation] + 1)];
+            }
+        }
+        
+        //convert str to decimal
+        NSDecimalNumber* decCurrency = [[NSDecimalNumber alloc] initWithString:strippedString];
+        
+        //convert string to currency
+        textField.text = [self convertToCurrencyString:decCurrency];
+        
+        [self calculateResults:@"EBUS Quote"];
     
-    } else if (textField.tag == 300) {
-        
-        //check to see if the number is already formatted correctly
-        NSRange dollarSignCheck = [textField.text rangeOfString:@"$"];
-        if (dollarSignCheck.location == NSNotFound) {
-        
-            //get entered value and format it to our number formatting
-            int aNum = [[textField text] intValue];
-            NSString* strFormattedValue = [NSNumberFormatter localizedStringFromNumber:@(aNum)numberStyle:NSNumberFormatterCurrencyStyle];
-        
-            textField.text = strFormattedValue;
-        }
-        
-        [self calculateResults];
-    
-    } else if (textField.tag == 301) {
-        
-        NSRange dollarSignCheck = [textField.text rangeOfString:@"$"];
-        if (dollarSignCheck.location == NSNotFound) {
-            
-            int aNum = [[textField text] intValue];
-            NSString* strFormattedValue = [NSNumberFormatter localizedStringFromNumber:@(aNum)numberStyle:NSNumberFormatterCurrencyStyle];
-       
-            textField.text = strFormattedValue;
-        }
-        
-        [self calculateResults];
     }
+
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    [textField resignFirstResponder];
     
     return YES;
 }
 
 #pragma mark - Web View Delegate Methods
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView { 
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     
     //get the web view frame
     CGRect frame = aWebView.frame;
@@ -1288,7 +1430,7 @@
         btnSwitchFrame.size.width = btnCalculatorImg.size.width;
         btnSwitchFrame.size.height = btnCalculatorImg.size.height;
         btnSwitchToCalc.frame = btnSwitchFrame;
-    
+        
     }
 }
 
@@ -1300,3 +1442,4 @@
 }
 
 @end
+

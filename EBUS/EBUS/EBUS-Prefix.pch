@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'EBUS' target in the 'EBUS' project
+// Prefix header for all source files of the 'ebus' target in the 'ebus' project
 //
 
 #import <Availability.h>

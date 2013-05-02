@@ -13,7 +13,7 @@
 }
 
 
-@property (nonatomic, retain) NSMutableArray* notesArray;
+@property (nonatomic, retain) NSMutableDictionary* dictNotes;
 
 +(OAI_StringManager* )sharedStringManager;
 
