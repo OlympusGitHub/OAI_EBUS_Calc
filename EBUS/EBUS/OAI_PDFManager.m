@@ -66,8 +66,8 @@
     do {
         
         //set up our font styles
-        UIFont* headerFont = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
-        UIFont* contentFont = [UIFont fontWithName:@"Helvetica" size:13.0];
+        UIFont* headerFont = [UIFont fontWithName:@"Helvetica-Bold" size:13.0];
+        UIFont* contentFont = [UIFont fontWithName:@"Helvetica" size:11.0];
         UIFont* tableFont = [UIFont fontWithName:@"Helvetica" size:10.0];
         UIFont* tableFontBold = [UIFont fontWithName:@"Helvetica-Bold" size:11.0];
         
@@ -108,11 +108,12 @@
         [self drawText:strPageTitle :pageTitleFrame :headerFont:textColor:1];
         
         //add some intro text
-        NSString* strIntroText = @" Thank you for your interest in Olympus products. Included below are your break even figures on EBUS equipment.";
-        CGSize introTextSize = [strIntroText sizeWithFont:contentFont constrainedToSize:pageConstraint lineBreakMode:NSLineBreakByWordWrapping];
+        NSString* strIntroText = @"Investing in Olympus technology is an important decision. Investing smarter in today's economy is a necessary one. That's why we've developed the Olympus EBUS Break Even Calculator. EBUS can be a compelling business proposition and major addition to your existing portfolio. In an effort to assist our current and prospective customers with their own analyses, Olympus has developed a flexible EBUS Break Even Calculator. Please keep in mind the following Olympus points when performing your analysis:\n\n\u2022 The EU-ME1 is Olympus' most versatile processor\n\u2022 Olympus quality is backed by 510K FDA regulations\n\u2022 Flexible financial options are available and can be tailored to meet your needs\n\u2022 Olympus University offers accredited training courses\n\u2022 Olympus offers 24/7 technical support\n\u2022 Our customers can utilize web portals for repair history and equipment information\n\u2022 Our broad Field Support Team is available to serve your needs\n\nThis calculator illustrates how EBUS can help to improve the planning and budgeting process as well as generate a prospective return based on specific investment, cost and revenue assumptions.  All relevant information to your current business situation has been included. Remember, this tool is designed to be flexible and to take into account your unique situation in terms of procedure volume, revenue, costs and the value of Olympus services that you plan to utilize going forward.\n\nThank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you.\n\nBest Regards,\n\nOlympus Endoscopy Account Manager";
+        
+        CGSize introTextSize = [strIntroText sizeWithFont:contentFont constrainedToSize:CGSizeMake(pageSize.width-40.0, pageSize.height) lineBreakMode:NSLineBreakByWordWrapping];
         CGRect introTextFrame = CGRectMake((pageSize.width/2)-(introTextSize.width/2), pageTitleFrame.origin.y + pageTitleFrame.size.height + 10.0, introTextSize.width, introTextSize.height);
         textColor = [colorManager setColor:66.0:66.0:66.0];
-        [self drawText:strIntroText :introTextFrame :contentFont:textColor:1];
+        [self drawText:strIntroText :introTextFrame :contentFont:textColor:0];
         
         //input section
         NSString* strInput = @"Input";
@@ -240,11 +241,10 @@
         float rowY = notesTitleFrame.origin.y + notesTitleFrame.size.height + 20.0;
        
         textColor = [colorManager setColor:66.0 :66.0 :66.0];
-        NSMutableArray* arrLastFrame = [[NSMutableArray alloc] init];
-        
         
         //the bullet list
         NSArray* arrNotesBulletList = [dictNotes objectForKey:@"Notes Bullet List"];
+        NSLog(@"%@", arrNotesBulletList);
         
         float bulletY = rowY;
         for(int i=0; i<arrNotesBulletList.count; i++) {

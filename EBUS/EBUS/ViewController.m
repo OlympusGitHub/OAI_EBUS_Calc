@@ -35,7 +35,7 @@
         raiseOnDivideByZero:NO
     ];
     
-    coverLetter = @"<div><p>Investing in Olympus technology is an important decision. Investing smarter in today's economy is a necessary one. That's why we've developed the Olympus EBUS Break Even Calculator. EBUS can be a compelling business proposition and major addition to your existing portfolio. In an effort to assist our current and prospective customers with their own analyses, Olympus has developed a flexible EBUS Break Even Calculator. Please keep in mind the following Olympus points when performing your analysis:</p><ul><li>The EU-ME1 is Olympus' most versatile processor</li><li>Olympus quality is backed by 510K FDA regulations</li><li>Flexible financial options are available and can be tailored to meet your needs</li><li>Olympus University offers accredited training courses</li><li>Olympus offers 24/7 technical support</li><li>Our customers can utilize web portals for repair history and equipment information</li><li>Our broad Field Support Team is available to serve your needs</li></ul><p>Utilize this calculator to illustrate how EBUS can help to improve the planning and budgeting process as well as generate a prospective return based on specific investment, cost and revenue assumptions.  Please enter any and all relevant information to your current business situation on the \"Input & Result\" page. Remember, this tool is designed to be flexible and to take into account your unique situation in terms of procedure volume, revenue, costs and the value of Olympus services that you plan to utilize going forward.</p><p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you.</p></div>";
+    coverLetter = @"<div><p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you. Below are the results of the EBUS Downstream Revenue Calculator.</p></div>";
     
     //notification center init
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"theMessenger"object:nil];
@@ -485,7 +485,7 @@
      EMAIL OPTIONS SCREEN
      *************************************/
     
-    vMailOptions = [[UIView alloc] initWithFrame:CGRectMake(0.0, -550.0, self.view.frame.size.width, 550.0)];
+    vMailOptions = [[UIView alloc] initWithFrame:CGRectMake(0.0, -550.0, self.view.frame.size.width, 280.0)];
     vMailOptions.backgroundColor = [UIColor whiteColor];
     [vMailOptions.layer setShadowColor:[UIColor blackColor].CGColor];
     [vMailOptions.layer setShadowOpacity:0.8];
@@ -531,7 +531,7 @@
     scCoverLetterOptions.selectedSegmentIndex = 0;
     
     [vMailOptions addSubview:scCoverLetterOptions];
-    */
+    
     
     NSString* strPDFOption=  @"Send As PDF";
     CGSize PDFOptionSize = [strPDFOption sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:24.0]];
@@ -541,6 +541,7 @@
     lblPDFOption.textColor = [colorManager setColor:66.0 :66.0 :66.0];
     lblPDFOption.backgroundColor = [UIColor clearColor];
     [vMailOptions addSubview:lblPDFOption];
+     
     
     //our sc butttons
     NSArray* segmentedControlItems = [[NSArray alloc] initWithObjects:@"Yes", @"No", nil];
@@ -550,16 +551,17 @@
     //reset
     CGRect scPDFOptionsFrame = scPDFOptions.frame;
     scPDFOptionsFrame.origin.x = ((vMailOptions.frame.size.width/2)-(scPDFOptionsFrame.size.width/2));
-    scPDFOptionsFrame.origin.y = lblPDFOption.frame.origin.y + lblPDFOption.frame.size.height;
+    scPDFOptionsFrame.origin.y = lblEmailOptions.frame.origin.y + lblEmailOptions.frame.size.height;
     scPDFOptions.frame = scPDFOptionsFrame;
     scPDFOptions.selectedSegmentIndex = 0;
     
     [vMailOptions addSubview:scPDFOptions];
+     */
     
     //signature
     NSString* strName=  @"Add Your Name";
     
-    txtName = [[UITextField alloc] initWithFrame:CGRectMake((vMailOptions.frame.size.width/2)-250.0, scPDFOptions.frame.origin.y + scPDFOptions.frame.size.height + 10.0, 500.0, 40.0)];
+    txtName = [[UITextField alloc] initWithFrame:CGRectMake((vMailOptions.frame.size.width/2)-250.0, lblEmailOptions.frame.origin.y + lblEmailOptions.frame.size.height + 20.0, 500.0, 40.0)];
     txtName.textColor = [colorManager setColor:66.0:66.0:66.];
     txtName.backgroundColor = [UIColor whiteColor];
     txtName.borderStyle = UITextBorderStyleRoundedRect;
@@ -1203,14 +1205,7 @@
         
         [emailBody appendString:[NSString stringWithFormat:@"<p style=\"font-weight: 900; font-size: 20px; margin: 0 0 20px 0; color:#08107B\">EBUS Break Even Results For %@</p><div style=\"color: #666; font-size: 18px; font-weight: 200; font-family: Helvetica, Arial, sans-serif\"", clientFacility]];
         
-        [emailBody appendString:@"<p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you Below are the results of the EBUS Downstream Revenue Calculator.</p>"];
-        
-        //signature
-        if (userName) {
-            [emailBody appendString:[NSString stringWithFormat:@"<p>Best regards,</p><p>%@</p></div>", userName]];
-        } else {
-            [emailBody appendString:@"<p>Best regards,</p><p>The Olympus EBUS Team</p>"];
-        }
+        [emailBody appendString:[NSString stringWithFormat:@"<p>Investing in Olympus technology is an important decision. Investing smarter in today's economy is a necessary one. That's why we've developed the Olympus EBUS Break Even Calculator. EBUS can be a compelling business proposition and major addition to your existing portfolio. In an effort to assist our current and prospective customers with their own analyses, Olympus has developed a flexible EBUS Break Even Calculator. Please keep in mind the following Olympus points when performing your analysis:</p><ul><li>The EU-ME1 is Olympus' most versatile processor</li><li>Olympus quality is backed by 510K FDA regulations</li><li>Flexible financial options are available and can be tailored to meet your needs</li><li>Olympus University offers accredited training courses</li><li>Olympus offers 24/7 technical support</li><li>Our customers can utilize web portals for repair history and equipment information</li><li>Our broad Field Support Team is available to serve your needs</ul></p></p>This calculator illustrates how EBUS can help to improve the planning and budgeting process as well as generate a prospective return based on specific investment, cost and revenue assumptions.  All relevant information to your current business situation has been included. Remember, this tool is designed to be flexible and to take into account your unique situation in terms of procedure volume, revenue, costs and the value of Olympus services that you plan to utilize going forward.</p><p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you.</p><p>Best Regards,</p><p>%@</p><p>Olympus Endoscopy Account Manager</p>", userName]];
         
         //add the calculations
         [emailBody appendString:[NSString stringWithFormat:@"<div style=\"margin: 0 0 20px 0; padding: 20px 5px 5px 5px; border: 1px solid #666; background:#FCFCD4;\"><p>%@</p>", equipmentQuote]];
@@ -1220,16 +1215,10 @@
         [emailBody appendString:[NSString stringWithFormat:@"<p>%@</p></div>", weekCount]];
         [emailBody appendString:[NSString stringWithFormat:@"</div>"]];
         
-        
-        
         //check to see if we are attaching a PDF
-        if (isPDF) {
-            
-            pdfTitle = [NSString stringWithFormat:@"ebusBreakEvenResults_%@.pdf", clientFacility];
-            pdfManager.strTableTitle = clientFacility;
-            [pdfManager makePDF:pdfTitle:dictResults];
-            
-        }
+        pdfTitle = [NSString stringWithFormat:@"ebusBreakEvenResults_%@.pdf", clientFacility];
+        pdfManager.strTableTitle = clientFacility;
+        [pdfManager makePDF:pdfTitle:dictResults];
         
         //check to make sure the app can send email
         if ([MFMailComposeViewController canSendMail]) {
@@ -1327,6 +1316,8 @@
 #pragma mark - TextField Methods
 
 - (void)textFieldDidEndEditing:(OAI_TextField *)textField {
+    
+    
     
     [textField resignFirstResponder];
     

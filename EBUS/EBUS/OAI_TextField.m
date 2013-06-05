@@ -25,6 +25,7 @@
         self.borderStyle = UITextBorderStyleRoundedRect;
         self.backgroundColor = [UIColor whiteColor];
         self.returnKeyType = UIReturnKeyDone;
+        self.keyboardType = UIKeyboardTypeNumberPad;
         //self.delegate = self;
         
     }

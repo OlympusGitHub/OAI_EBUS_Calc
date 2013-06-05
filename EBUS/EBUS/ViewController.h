@@ -72,6 +72,8 @@
     
     BOOL isEmailValid;
     
+    NSString* strPreviousText; 
+    
     
 }
 
