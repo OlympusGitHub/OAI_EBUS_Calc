@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB1D418D176A3D53006E4B23 /* btnReload.png in Resources */ = {isa = PBXBuildFile; fileRef = DB1D418C176A3D53006E4B23 /* btnReload.png */; };
 		DB2DA3C1170214F10001BB87 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB2DA3C0170214F10001BB87 /* UIKit.framework */; };
 		DB2DA3C3170214F10001BB87 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB2DA3C2170214F10001BB87 /* Foundation.framework */; };
 		DB2DA3C5170214F10001BB87 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB2DA3C4170214F10001BB87 /* CoreGraphics.framework */; };
@@ -53,10 +54,12 @@
 		DB43D26A170B61B000B5BA83 /* ebusCalculator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DBE7849A1705F8940075FBB4 /* ebusCalculator@2x.png */; };
 		DBBF85A31716F531004CB92B /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = DBBF85A21716F531004CB92B /* Default-Portrait~ipad.png */; };
 		DBBF85A51716F537004CB92B /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = DBBF85A41716F537004CB92B /* Default-Portrait@2x~ipad.png */; };
+		DBC21BF2176B5A5200465E0F /* btnHome.png in Resources */ = {isa = PBXBuildFile; fileRef = DBC21BF1176B5A5200465E0F /* btnHome.png */; };
 		DBE7849D1705FABC0075FBB4 /* OAI_endoscopeinlung.png in Resources */ = {isa = PBXBuildFile; fileRef = DBE7849C1705FABC0075FBB4 /* OAI_endoscopeinlung.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DB1D418C176A3D53006E4B23 /* btnReload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnReload.png; sourceTree = "<group>"; };
 		DB2DA3BD170214F10001BB87 /* ebus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ebus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB2DA3C0170214F10001BB87 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		DB2DA3C2170214F10001BB87 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -116,6 +119,7 @@
 		DB2DA43D170216CB0001BB87 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		DBBF85A21716F531004CB92B /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		DBBF85A41716F537004CB92B /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
+		DBC21BF1176B5A5200465E0F /* btnHome.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHome.png; sourceTree = "<group>"; };
 		DBE784981705F8920075FBB4 /* ebusCalculator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ebusCalculator.png; sourceTree = "<group>"; };
 		DBE7849A1705F8940075FBB4 /* ebusCalculator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ebusCalculator@2x.png"; sourceTree = "<group>"; };
 		DBE7849C1705FABC0075FBB4 /* OAI_endoscopeinlung.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OAI_endoscopeinlung.png; sourceTree = "<group>"; };
@@ -222,6 +226,8 @@
 		DB2DA3ED170216270001BB87 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DBC21BF1176B5A5200465E0F /* btnHome.png */,
+				DB1D418C176A3D53006E4B23 /* btnReload.png */,
 				DBE7849C1705FABC0075FBB4 /* OAI_endoscopeinlung.png */,
 				DB2DA40B1702168A0001BB87 /* OA_logo_black_topbar.png */,
 				DB2DA40C1702168A0001BB87 /* btnCloseX.png */,
@@ -366,6 +372,8 @@
 				DB43D26A170B61B000B5BA83 /* ebusCalculator@2x.png in Resources */,
 				DBBF85A31716F531004CB92B /* Default-Portrait~ipad.png in Resources */,
 				DBBF85A51716F537004CB92B /* Default-Portrait@2x~ipad.png in Resources */,
+				DB1D418D176A3D53006E4B23 /* btnReload.png in Resources */,
+				DBC21BF2176B5A5200465E0F /* btnHome.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

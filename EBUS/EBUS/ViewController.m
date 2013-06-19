@@ -17,6 +17,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    //dismiss the keyboard when touching outside of a textfield
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+       initWithTarget:self
+       action:@selector(dismissKeyboard)];
+    
+    [self.view addGestureRecognizer:tap];
+    
     /*************************************
      INIT MANAGERS
      *************************************/
@@ -72,6 +80,22 @@
     [btnAccount addTarget:self action:@selector(toggleAccount:) forControlEvents:UIControlEventTouchUpInside];
     [btnAccount setBackgroundColor:[UIColor clearColor]];
     [topBar addSubview:btnAccount];
+    
+    //add the toggle account data button
+    UIImage* imgReset = [UIImage imageNamed:@"btnReload.png"];
+    UIButton* btnReset = [[UIButton alloc] initWithFrame:CGRectMake(btnAccount.frame.origin.x + btnAccount.frame.size.width + 10.0, 4.0, imgReset.size.width, imgReset.size.height)];
+    [btnReset setImage:imgReset forState:UIControlStateNormal];
+    [btnReset addTarget:self action:@selector(resetData:) forControlEvents:UIControlEventTouchUpInside];
+    [btnReset setBackgroundColor:[UIColor clearColor]];
+    [topBar addSubview:btnReset];
+    
+    //add the home button
+    UIImage* imgHome = [UIImage imageNamed:@"btnHome.png"];
+    UIButton* btnHome = [[UIButton alloc] initWithFrame:CGRectMake(btnReset.frame.origin.x + btnReset.frame.size.width + 10.0, 4.0, imgHome.size.width, imgHome.size.height)];
+    [btnHome setImage:imgHome forState:UIControlStateNormal];
+    [btnHome addTarget:self action:@selector(showTitleScreen:) forControlEvents:UIControlEventTouchUpInside];
+    [btnHome setBackgroundColor:[UIColor clearColor]];
+    [topBar addSubview:btnHome];
         
     //set the app title
     CGSize titleSize = [@"EBUS Break Even Calculator" sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:18.0]];
@@ -221,6 +245,9 @@
     /**********************************
      INPUT SECTION
      **********************************/
+    
+    dictInputTextFields = [[NSMutableDictionary alloc] init];
+    
     //label
     OAI_Label* lblInputSection = [[OAI_Label alloc] initWithFrame:CGRectMake(20.0, lblCalculatorInstructions.frame.origin.y + lblCalculatorInstructions.frame.size.height, vCalculatorScreen.frame.size.width, 30.0)];
     lblInputSection.text = @"Input:";
@@ -247,6 +274,13 @@
     txtEBUSQuote.delegate = self;
     txtEBUSQuote.textAlignment = NSTextAlignmentRight;
     txtEBUSQuote.tag = 300;
+    [dictInputTextFields setObject:
+        [[NSDictionary alloc] initWithObjectsAndKeys:
+            txtEBUSQuote, @"Text Field",
+            @"", @"Default Value",
+            @"Dollar", @"Show Value As",
+        nil]
+    forKey:@"EBUS Quote"];
     
     UIButton* btnEBUSHelp = [UIButton buttonWithType:UIButtonTypeInfoDark];
     //reset the frame
@@ -277,6 +311,13 @@
     txtDownstreamRev.textAlignment = NSTextAlignmentRight;
     txtDownstreamRev.delegate = self;
     txtDownstreamRev.tag = 301;
+    [dictInputTextFields setObject:
+     [[NSDictionary alloc] initWithObjectsAndKeys:
+      txtDownstreamRev, @"Text Field",
+      @"2962", @"Default Value",
+      @"Dollar", @"Show Value As",
+      nil]
+    forKey:@"Downstream Revenue"];
     
     UIButton* btnRevenueHelp = [UIButton buttonWithType:UIButtonTypeInfoDark];
     //reset the frame
@@ -311,6 +352,13 @@
     txtNetProfit.textAlignment = NSTextAlignmentRight;
     txtNetProfit.delegate = self;
     txtNetProfit.tag = 302;
+    [dictInputTextFields setObject:
+     [[NSDictionary alloc] initWithObjectsAndKeys:
+      txtNetProfit, @"Text Field",
+      @"30", @"Default Value",
+      @"Percentage", @"Show Value As",
+      nil]
+    forKey:@"Net Profit"];
     
     UIButton* btnNetProfitHelp = [UIButton buttonWithType:UIButtonTypeInfoDark];
     //reset the frame
@@ -556,7 +604,7 @@
     scPDFOptions.selectedSegmentIndex = 0;
     
     [vMailOptions addSubview:scPDFOptions];
-     */
+     
     
     //signature
     NSString* strName=  @"Add Your Name";
@@ -570,11 +618,12 @@
     txtName.delegate = self;
     txtName.tag = 701;
     [vMailOptions addSubview:txtName];
+     */
     
     //signature
-    NSString* strFacility = @"Company/Facility Name";
+    NSString* strFacility = @"Customer/Facility Name";
     
-    txtFacility = [[UITextField alloc] initWithFrame:CGRectMake((vMailOptions.frame.size.width/2)-250.0, txtName.frame.origin.y + txtName.frame.size.height + 20.0, 500.0, 40.0)];
+    txtFacility = [[UITextField alloc] initWithFrame:CGRectMake((vMailOptions.frame.size.width/2)-250.0, lblEmailOptions.frame.origin.y + lblEmailOptions.frame.size.height + 20.0, 500.0, 40.0)];
     txtFacility.textColor = [colorManager setColor:66.0:66.0:66.];
     txtFacility.backgroundColor = [UIColor whiteColor];
     txtFacility.borderStyle = UITextBorderStyleRoundedRect;
@@ -816,6 +865,106 @@
     [self animateView:accountManager :vAccountFrame];
 }
 
+- (void) showTitleScreen : (UIButton*) myButton {
+    
+    //get the subviews
+    NSArray* arrSubviews = self.view.subviews;
+    CGRect viewFrame;
+    
+    //loop
+    for (int i=0; i<arrSubviews.count; i++) {
+        
+        if ([[arrSubviews objectAtIndex:i] isMemberOfClass:[UIView class]]) {
+            
+            UIView* thisView = [arrSubviews objectAtIndex:i];
+            
+            //get the views to move
+            if (thisView.tag == 102 || thisView.tag == 103) {
+                
+                viewFrame = thisView.frame;
+
+                if (thisView.tag == 102) {
+                    
+                    viewFrame.origin.x = 0.0-thisView.frame.size.width;
+                    
+                } else if (thisView.tag == 103) {
+                    
+                    viewFrame.origin.x = thisView.frame.size.width + 1.0;
+                }
+                
+                //move the views
+                [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn
+                 
+                     animations:^{
+                         thisView.frame = viewFrame;
+                     }
+     
+                     completion:^ (BOOL finished) {
+                     }
+                 
+                 ];
+                
+            } else if (thisView.tag == 101) {
+                
+                [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn
+     
+                     animations:^{
+                         thisView.alpha = 1.0;
+                     }
+     
+                     completion:^ (BOOL finished) {
+                     }
+                 ];
+                
+            }
+            
+            
+        }
+        
+    }
+    
+    
+    
+}
+
+- (void) resetData : (UIButton*) myButton {
+    
+    //loop through the text fields
+    for(NSString* strThisKey in dictInputTextFields) {
+        
+        //get the text field dictionary
+        NSDictionary* dictThisElement = [dictInputTextFields objectForKey:strThisKey];
+        
+        //get the text field
+        UITextField* thisTextField = [dictThisElement objectForKey:@"Text Field"];
+        
+        //set the value
+        NSString* strThisValue = [dictThisElement objectForKey:@"Default Value"];
+        
+        if (![strThisKey isEqualToString:@"EBUS Quote"]) {
+            
+            //get the display type
+            NSString* strThisDisplayType = [dictThisElement objectForKey:@"Show Value As"];
+            
+            if ([strThisDisplayType isEqualToString:@"Percentage"]) {
+                
+                strThisValue = [NSString stringWithFormat:@"%@%%", strThisValue];
+            
+            } else {
+                
+                NSNumberFormatter* nf = [[NSNumberFormatter alloc] init];
+                [nf setNumberStyle: NSNumberFormatterCurrencyStyle];
+                strThisValue = [nf stringFromNumber:[NSNumber numberWithFloat:[strThisValue floatValue]]];
+                
+            }
+            
+        }
+        
+        thisTextField.text = strThisValue;
+        
+    }
+}
+
 
 - (void) clearDeck {
     
@@ -989,7 +1138,10 @@
     
     } else {
         
+        
+        
         if (txtEBUSQuote.text.length == 0 || [txtEBUSQuote.text isEqualToString:NULL]) {
+           
             hasError = YES;
             [strErrMsg appendString:@"You must enter a number for the EBUS quote entry.\n\n"];
         }
@@ -1150,7 +1302,7 @@
     }
     
     userMessage = txtEmailMessage.text;
-    userName = txtName.text;
+    //userName = txtName.text;
     clientFacility = txtFacility.text;
     
     //get results
@@ -1205,7 +1357,7 @@
         
         [emailBody appendString:[NSString stringWithFormat:@"<p style=\"font-weight: 900; font-size: 20px; margin: 0 0 20px 0; color:#08107B\">EBUS Break Even Results For %@</p><div style=\"color: #666; font-size: 18px; font-weight: 200; font-family: Helvetica, Arial, sans-serif\"", clientFacility]];
         
-        [emailBody appendString:[NSString stringWithFormat:@"<p>Investing in Olympus technology is an important decision. Investing smarter in today's economy is a necessary one. That's why we've developed the Olympus EBUS Break Even Calculator. EBUS can be a compelling business proposition and major addition to your existing portfolio. In an effort to assist our current and prospective customers with their own analyses, Olympus has developed a flexible EBUS Break Even Calculator. Please keep in mind the following Olympus points when performing your analysis:</p><ul><li>The EU-ME1 is Olympus' most versatile processor</li><li>Olympus quality is backed by 510K FDA regulations</li><li>Flexible financial options are available and can be tailored to meet your needs</li><li>Olympus University offers accredited training courses</li><li>Olympus offers 24/7 technical support</li><li>Our customers can utilize web portals for repair history and equipment information</li><li>Our broad Field Support Team is available to serve your needs</ul></p></p>This calculator illustrates how EBUS can help to improve the planning and budgeting process as well as generate a prospective return based on specific investment, cost and revenue assumptions.  All relevant information to your current business situation has been included. Remember, this tool is designed to be flexible and to take into account your unique situation in terms of procedure volume, revenue, costs and the value of Olympus services that you plan to utilize going forward.</p><p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you.</p><p>Best Regards,</p><p>%@</p><p>Olympus Endoscopy Account Manager</p>", userName]];
+        [emailBody appendString:[NSString stringWithFormat:@"<p>Investing in Olympus technology is an important decision. Investing smarter in today's economy is a necessary one. That's why we've developed the Olympus EBUS Break Even Calculator. EBUS can be a compelling business proposition and major addition to your existing portfolio. In an effort to assist our current and prospective customers with their own analyses, Olympus has developed a flexible EBUS Break Even Calculator. Please keep in mind the following Olympus points when performing your analysis:</p><ul><li>The EU-ME1 is Olympus' most versatile processor</li><li>Olympus quality is backed by 510K FDA regulations</li><li>Flexible financial options are available and can be tailored to meet your needs</li><li>Olympus University offers accredited training courses</li><li>Olympus offers 24/7 technical support</li><li>Our customers can utilize web portals for repair history and equipment information</li><li>Our broad Field Support Team is available to serve your needs</ul></p></p>This calculator illustrates how EBUS can help to improve the planning and budgeting process as well as generate a prospective return based on specific investment, cost and revenue assumptions.  All relevant information to your current business situation has been included. Remember, this tool is designed to be flexible and to take into account your unique situation in terms of procedure volume, revenue, costs and the value of Olympus services that you plan to utilize going forward.</p><p>Thank you for your time and interest in Olympus' products and solutions. At Olympus, we appreciate the opportunity to partner with our customers to provide the most advanced and efficient care to your patients.  We look forward to doing business with you.</p><p>Best Regards,</p>"]];
         
         //add the calculations
         [emailBody appendString:[NSString stringWithFormat:@"<div style=\"margin: 0 0 20px 0; padding: 20px 5px 5px 5px; border: 1px solid #666; background:#FCFCD4;\"><p>%@</p>", equipmentQuote]];
@@ -1313,82 +1465,139 @@
     
 }
 
+#pragma mark - Dismiss Keyboard
+
+- (void) dismissKeyboard {
+    
+    NSArray* arrSubviews = self.view.subviews;
+    UIView* vCalculations = [arrSubviews objectAtIndex:2];
+    NSArray* arrSectionSubs = vCalculations.subviews;
+    UIView* vInputs = [arrSectionSubs objectAtIndex:2];
+    NSArray* arrInputs = vInputs.subviews;
+    
+    for(int i=0; i<arrInputs.count; i++) {
+        
+        if ([[arrInputs objectAtIndex:i] isMemberOfClass:[OAI_TextField class]]) {
+            
+            OAI_TextField* thisTextField = [arrInputs objectAtIndex:i];
+            
+            if (thisTextField.isFirstResponder) {
+                [thisTextField resignFirstResponder];
+            }
+        }
+    }
+}
+
 #pragma mark - TextField Methods
 
 - (void)textFieldDidEndEditing:(OAI_TextField *)textField {
     
-    
-    
     [textField resignFirstResponder];
     
-    BOOL isValid; 
+    BOOL isValid = YES;
     
     //net profit (percentage)
     if (textField.tag == 302) {
-    
-        //get first character and see if it is a number or $
-        BOOL isPercentSymbol = NO;
-        NSString* strPercentage;
-        
-        // Create the predicate
-        NSPredicate *myPredicate = [NSPredicate predicateWithFormat:@"SELF endswith %@", @"%"];
-        isPercentSymbol = [myPredicate evaluateWithObject:textField.text];
-        
-        
-        //check to see if the entry is numeric
-        if (!isPercentSymbol) {
-            NSCharacterSet *alphaNums = [NSCharacterSet decimalDigitCharacterSet];
-            NSCharacterSet *inStringSet = [NSCharacterSet characterSetWithCharactersInString:textField.text];
             
-            isValid = [alphaNums isSupersetOfSet:inStringSet];
-            
-            if (!isValid) {
-                strPercentage = @"0.0%";
-            } else {
-                strPercentage = [NSString stringWithFormat:@"%@%%", textField.text];
-            }
-            
-            textField.text = strPercentage;
+        //make sure something was entered
+        if (textField.text == nil || [textField.text isEqualToString:@""]) {
+            isValid = NO;
         }
         
+        //check to see if the user entered any alpha characters or symbols other than a % symbol
+        NSCharacterSet* alphaSet = [NSCharacterSet characterSetWithCharactersInString:@"%0123456789"];
+        alphaSet = [alphaSet invertedSet];
+        NSRange r = [textField.text rangeOfCharacterFromSet:alphaSet];
+        
+        if (r.location != NSNotFound) {
+            isValid = NO;
+            
+        }
+        
+        if (isValid) {
+            
+            //convert to a percentage symbol
+            textField.text = [NSString stringWithFormat:@"%@%%", textField.text];
+            
+        } else {
+            
+            //set to default value
+            textField.text = @"30%";
+            
+        }
+         
         [self calculateResults:@"Net Profit Margin"];
     
     } else if (textField.tag == 300 || textField.tag == 301) {
         
-        //check to see if the user put in decimal points, strip string of point and following items
-        NSString* strWorkingString;
-        if([textField.text rangeOfString:@"."].location != NSNotFound) {
-            strWorkingString = [textField.text substringWithRange:NSMakeRange(0, [textField.text rangeOfString:@"."].location)];
-        } else {
-            strWorkingString = textField.text;
+        //make sure something was entered
+        if (textField.text == nil || [textField.text isEqualToString:@""]) {
+            isValid = NO;
         }
         
-        //invoke NSScanner to clean the string of any other non-numeric characters ($, %, etc.)
-        NSScanner* scanner = [NSScanner scannerWithString:strWorkingString];
-        NSCharacterSet* numbers = [NSCharacterSet
-                                   characterSetWithCharactersInString:@"0123456789"];
-        NSMutableString* strippedString = [NSMutableString stringWithCapacity:strWorkingString.length];
+        if (isValid) { 
         
-        while ([scanner isAtEnd] == NO) {
-            NSString* buffer;
-            if ([scanner scanCharactersFromSet:numbers intoString:&buffer]) {
-                [strippedString appendString:buffer];
+            //check to see if the user put in decimal points, strip string of point and following items
+            NSString* strWorkingString;
+            if([textField.text rangeOfString:@"."].location != NSNotFound) {
+                strWorkingString = [textField.text substringWithRange:NSMakeRange(0, [textField.text rangeOfString:@"."].location)];
+            } else {
+                strWorkingString = textField.text;
+            }
+            
+            //check to see if user put in just a text string
+            NSCharacterSet* alphaSet = [NSCharacterSet characterSetWithCharactersInString:@"$.0123456789"];
+            alphaSet = [alphaSet invertedSet];
+            NSRange r = [strWorkingString rangeOfCharacterFromSet:alphaSet];
+            if (r.location != NSNotFound) {
+                isValid = NO;
+            }
+
+            if (isValid) {
+                
+                //invoke NSScanner to clean the string of any other non-numeric characters ($, %, etc.)
+                NSScanner* scanner = [NSScanner scannerWithString:strWorkingString];
+                NSCharacterSet* numbers = [NSCharacterSet
+                                           characterSetWithCharactersInString:@"0123456789"];
+                NSMutableString* strippedString = [NSMutableString stringWithCapacity:strWorkingString.length];
+                
+                while ([scanner isAtEnd] == NO) {
+                    NSString* buffer;
+                    if ([scanner scanCharactersFromSet:numbers intoString:&buffer]) {
+                        [strippedString appendString:buffer];
+                        
+                    } else {
+                        [scanner setScanLocation:([scanner scanLocation] + 1)];
+                    }
+                }
+                
+                //convert str to decimal
+                NSDecimalNumber* decCurrency = [[NSDecimalNumber alloc] initWithString:strippedString];
+                
+                //convert string to currency
+                textField.text = [self convertToCurrencyString:decCurrency];
                 
             } else {
-                [scanner setScanLocation:([scanner scanLocation] + 1)];
+                
+                if (textField.tag == 301) { 
+                    textField.text = @"$2962.00";
+                } else if (textField.tag == 300) {
+                    textField.text = @"";
+                }
+            }
+            
+            [self calculateResults:@"EBUS Quote"];
+            
+        } else {
+            
+            if (textField.tag == 300) {
+                textField.text = @"";
+            } else {
+                textField.text = @"$2962.00";
             }
         }
-        
-        //convert str to decimal
-        NSDecimalNumber* decCurrency = [[NSDecimalNumber alloc] initWithString:strippedString];
-        
-        //convert string to currency
-        textField.text = [self convertToCurrencyString:decCurrency];
-        
-        [self calculateResults:@"EBUS Quote"];
     
     }
-
     
 }
 

@@ -36,7 +36,7 @@
 }
 
 - (void) showAlert : (NSString* ) alertMsg {
-    
+    NSLog(@"wtf?");
     //remove all objects
     NSArray* mySubview = self.subviews;
     

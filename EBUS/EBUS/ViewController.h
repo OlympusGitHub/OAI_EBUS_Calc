@@ -49,6 +49,7 @@
     OAI_TextField* txtEBUSQuote;
     OAI_Label* lblProcedureResult;
     OAI_Label* lblWeekResult;
+    NSMutableDictionary* dictInputTextFields;
     
     UIWebView* webNotes;
     CGRect webNotesFrame;
@@ -101,11 +102,19 @@
 
 - (void) closeEmailOptions;
 
+- (void) resetData : (UIButton*) myButton;
+
 - (NSDecimalNumber*) convertToNSDecimalNumber : (NSArray*) itemsToMultiply;
 
 - (NSString*) convertToCurrencyString : (NSDecimalNumber*) numberToConvert;
 
 - (NSString*) stripDollarSign : (NSString*) stringToStrip;
+
+- (UIView *)findFirstResponder; 
+
+- (void) dismissKeyboard;
+
+- (void) showTitleScreen : (UIButton*) myButton;
 
 
 @end
